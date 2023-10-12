@@ -75,7 +75,36 @@ swm_df =
   )
 ```
 
+## APIs
+sending request to API to get the data; good bc reproducible 
+click on API on website and click csv and copy link
+Get water data from NYC
+content() strip out request info just want the data
+```{r}
+nyc_water_df = GET("https://data.cityofnewyork.us/resource/ia2d-e54m.csv") |> 
+  content("parsed")
+```
 
+BRFSS data
+downloads 1000 out of 134000 rows; that's all it allowed us to download
+can adjust limit to get more of the rows
+found instructions for getting more code from the website
+limits on the data size are not uncommon
+```{r}
+brfss_df = GET("https://data.cdc.gov/resource/acme-vg9e.csv",
+               query = list("$limit" = 5000)) |> 
+  content()
+```
+
+
+don't just download export the csv from the website; better to use API for reproducibility and easiest to run with updated datasets each time
+
+
+Pokemon gives you weird data rectangle 
+```{r}
+poke_df = GET("https://pokeapi.co/api/v2/pokemon/ditto") |> 
+  content()
+```
 
 
 
