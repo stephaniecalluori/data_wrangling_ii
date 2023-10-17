@@ -217,3 +217,44 @@ informative labels for the categories working with factor variables be
 sure you know what is going on behind the scenes
 
 ## NSDUH
+
+remove first row
+
+``` r
+nsduh_url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+
+table_marj = read_html(nsduh_url) |> 
+  html_table() |> 
+  first() |> 
+  slice(-1)
+```
+
+now tidy dataset; go from wide to longer format; pivot wider on
+everything except state find open paranthesis to separate
+
+``` r
+marj_df = table_marj |> 
+  select(-contains("P Value")) |> 
+  pivot_longer(
+    -State,
+    names_to = "age_year",
+    values_to = "percent"
+  ) |>
+  separate(age_year, into = c("age", "year"), sep = "\\(") |>
+  mutate(
+    year = str_replace(year, "\\)", ""),
+    percent = str_replace(percent, "[a-c]$", ""),
+    percent = as.numeric(percent)) |>
+  filter(!(State %in% c("Total U.S.", "Northeast", "Midwest", "South", "West")))
+```
+
+``` r
+marj_df |> 
+  filter(age == "18-25") |> 
+  mutate(State = fct_reorder(State, percent)) |> 
+  ggplot(aes(x = State, y = percent, color = year)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+![](strings_factors_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
