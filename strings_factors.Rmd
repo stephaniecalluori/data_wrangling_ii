@@ -1,0 +1,141 @@
+---
+title: "Strings and Factors"
+output: github_document
+---
+
+
+```{r}
+library(tidyverse)
+library(rvest)
+library(p8105.datasets)
+```
+
+
+## Strings and manipulations
+detecting patterns in string vectors
+string matches remember are case sensitive
+use str_detect to see if something exists; often useful with filter function
+str_replace
+```{r}
+string_vec = c("my", "name", "is", "jeff")
+
+str_detect(string_vec, "jeff")
+
+str_detect(string_vec, "Jeff")
+
+str_replace(string_vec, "jeff", "Jeff")
+
+```
+
+looking for expressions that start with I think; ^ indicates beginning of the line; $ end of a line
+```{r}
+string_vec = c(
+  "i think we all rule for participating",
+  "i think i have been caught",
+  "i think this will be quite fun actually",
+  "it will be fun, i think"
+  )
+
+str_detect(string_vec, "^i think")
+
+str_detect(string_vec, "i think$")
+
+```
+
+look for capital or lower case pumpkin; specify two diff cases for a match
+```{r}
+string_vec = c(
+  "Time for a Pumpkin Spice Latte!",
+  "went to the #pumpkinpatch last weekend",
+  "Pumpkin Pie is obviously the best pie",
+  "SMASHING PUMPKINS -- LIVE IN CONCERT!!"
+  )
+
+str_detect(string_vec,"[Pp]umpkin")
+```
+
+
+starts with a number then has any lower case letter that follows that 
+
+have to be explicit about allowing spaces; spaces count as a character
+```{r}
+string_vec = c(
+  '7th inning stretch',
+  '1st half soon to begin. Texas won the toss.',
+  'she is 5 feet 4 inches tall',
+  '3AM - cant sleep :('
+  )
+
+str_detect(string_vec, "[0-9]")
+
+str_detect(string_vec, "^[0-9]")
+
+str_detect(string_vec, "^[0-9][a-z]")
+
+str_detect(string_vec, "^[0-9][a-zA-Z]")
+```
+
+. matches any character at all
+```{r}
+string_vec = c(
+  'Its 7:11 in the evening',
+  'want to go to 7-11?',
+  'my flight is AA711',
+  'NetBios: scanning ip 203.167.114.66'
+  )
+
+str_detect(string_vec, "7.11")
+
+```
+
+find any instance where the square bracket exists; square bracket is a special character so you designate wtih two backslashes
+```{r}
+string_vec = c(
+  'The CI is [2, 5]',
+  ':-]',
+  ':-[',
+  'I found the answer on pages [6-7]'
+  )
+
+str_detect(string_vec, "\\[")
+
+str_detect(string_vec, "\\[[0-9]")
+
+```
+
+try not to use special characters in your data bc it's very annoying!! stick with letters, numbers, and some underscores
+
+## Factors
+
+create a string variable
+```{r}
+vec_sex = c("male", "male", "female", "female")
+vec_sex
+```
+
+convert to factor; print out to see the factor levels and their order; as numeric to see undelrying numbers
+```{r}
+vec_sex = factor(c("male", "male", "female", "female"))
+vec_sex
+
+as.numeric(vec_sex)
+
+vec_sex = fct_relevel(vec_sex, "male")
+vec_sex
+
+as.numeric(vec_sex)
+```
+
+if you have categorical variables don't label as 1-5; put actual informative labels for the categories 
+working with factor variables be sure you know what is going on behind the scenes
+
+## NSDUH
+```{r}
+
+```
+
+
+
+
+
+
